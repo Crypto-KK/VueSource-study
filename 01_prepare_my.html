@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="test">尚硅谷IT教育</div>
+
+<ul id="fragment_test">
+    <li>test1</li>
+    <li>test2</li>
+    <li>test3</li>
+</ul>
+
+
+<!--
+1. [].slice.call(lis): 将伪数组转换为真数组
+2. node.nodeType: 得到节点类型
+3. Object.defineProperty(obj, propertyName, {}): 给对象添加属性(指定描述符)
+4. Object.keys(obj): 得到对象自身可枚举属性组成的数组
+5. obj.hasOwnProperty(prop): 判断prop是否是obj自身的属性
+6. DocumentFragment: 文档碎片(高效批量更新多个节点)
+-->
+
+<script type="text/javascript">
+    //1
+    const lis = document.getElementsByTagName('li');
+    console.log(lis instanceof Array, lis[1].innerHTML, lis.forEach);
+    console.log(Array.from(lis));
+    console.log(Array.prototype.slice.call(lis))
+
+    //2
+    const elementNode = document.getElementById('test')
+    const attrNode = elementNode.getAttributeNode('id')
+    const textNode = elementNode.firstChild
+    console.log(elementNode.nodeType, attrNode.nodeType, textNode.nodeType)
+
+
+    //3
+    const obj = {
+        firstName: 'a',
+        lastName: 'b'
+    }
+    Object.defineProperty(obj, 'fullName', {
+        enumerable: true,
+        get() {
+            return this.firstName + '-' + this.lastName
+        },
+        set(v) {
+            const name = v.split('-')
+            this.firstName = name[0]
+            this.lastName = name[1]
+        }
+    })
+    console.log(obj.fullName)
+    obj.firstName = 'c'
+    console.log(obj.fullName)
+    obj.fullName = 'vv-e'
+    console.log(obj.firstName)
+
+
+    //4
+    const attrs = Object.keys(obj)
+    console.log(attrs)
+
+    //5
+    console.log(obj.hasOwnProperty('fullName'), obj.hasOwnProperty('toString'))
+
+    //6
+    const ul = document.getElementById('fragment_test')
+    const fragment = document.createDocumentFragment()
+    let child;
+    while (child=ul.firstChild) {
+        fragment.appendChild(child)
+    }
+    Array.prototype.slice.call(fragment.childNodes).forEach(node => {
+        if (node.nodeType === 1) {
+            //<li>
+            node.textContent = 'abc'
+        }
+    })
+    ul.appendChild(fragment)
+
+
+</script>
+</body>
+</html>
